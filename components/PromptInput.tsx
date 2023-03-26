@@ -1,7 +1,17 @@
 "use client";
+import fetchSuggestionFromChatGPT from "@/lib/fetchSuggestionFromChatGPT";
 import { useState } from "react";
+import useSWR from "swr";
 function PromptInput() {
   const [input, setInput] = useState("");
+  const {
+    data: suggestion,
+    mutate,
+    isLoading,
+    isValidating,
+  } = useSWR("/api/suggestion", fetchSuggestionFromChatGPT, {
+    revalidateOnFocus: false,
+  });
   return (
     <div className="m-10">
       <form className="flex flex-col lg:flex-row shadow-md shadow-slate-400/10">
@@ -11,7 +21,16 @@ function PromptInput() {
           placeholder="Enter a Prompt..."
           className="flex-1 p-4  outline-none rounded-md "
         />
-        <button className={`p-4 font-bold ${input ? 'bg-violet-500 text-white transition-colors duration-200' : 'text-gray-300 cursor-not-allowed' } `} disabled={!input}>Generate</button>
+        <button
+          className={`p-4 font-bold ${
+            input
+              ? "bg-violet-500 text-white transition-colors duration-200"
+              : "text-gray-300 cursor-not-allowed"
+          } `}
+          disabled={!input}
+        >
+          Generate
+        </button>
         <button className="p-4 bg-violet-400 text-white transition-colors duration-200 font-bold disabled:text-gray-300 disabled:cursor-not-allowed disabled:bg-gray-400">
           Use Suggestion{" "}
         </button>
